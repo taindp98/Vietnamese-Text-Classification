@@ -1,7 +1,5 @@
 # The implementation of Vietnamese Text Classification
 
-![](./data/wordclouds.png)
-
 We aims to build a simple attention based deep neural model to classify the vietnamese texts.
 
 ## Table of contents
