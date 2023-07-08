@@ -5,43 +5,15 @@ from torch.autograd import Variable
 from torch.nn import functional as F
 import numpy as np
 
-# class LSTM_fixed_len(torch.nn.Module) :
-#     def __init__(self,vocab_size,embedding_dim, hidden_dim,num_layers,bidirectional,dropout,n_class) :
-#         super().__init__()
-#         self.embeddings = nn.Embedding(vocab_size, embedding_dim, padding_idx=0)
-#         self.lstm = nn.LSTM(embedding_dim, 
-#                            hidden_dim, 
-#                            num_layers=num_layers, 
-#                            bidirectional=bidirectional, 
-#                            dropout=dropout,
-#                            batch_first=True)
-# #         self.linear = nn.Linear(hidden_dim,n_class)
-#         self.fc1 = nn.Linear(hidden_dim * 2, hidden_dim)
-        
-# #         self.fc2 = nn.Linear(hidden_dim, n_class)
-#         self.fc2 = nn.Linear(hidden_dim, n_class)
-        
-#         self.dropout = nn.Dropout(dropout)
-# #         self.dropout = nn.Dropout(0.2)
-        
-#     def forward(self, x):
-#         x = self.embeddings(x)
-# #         x = self.dropout(x)
-#         lstm_out, (ht, ct) = self.lstm(x)
-    
-#         hidden = self.dropout(torch.cat((ht[-2], ht[-1]), dim = 1))
-        
-#         output = self.fc1(hidden)
-        
-#         output = self.dropout(self.fc2(output))
-# #         output = self.fc2(output)
-        
-#         return output
-
-
-
 class AttentionModel(torch.nn.Module):
-	def __init__(self, batch_size, output_size, hidden_size, vocab_size, embedding_length):
+	def __init__(
+			self, 
+			batch_size, 
+			output_size, 
+			hidden_size, 
+			vocab_size, 
+			embedding_length
+	):
 		super(AttentionModel, self).__init__()
 		
 		"""
@@ -54,10 +26,7 @@ class AttentionModel(torch.nn.Module):
 		embedding_length : Embeddding dimension of GloVe word embeddings
 		weights : Pre-trained GloVe word_embeddings which we will use to create our word_embedding look-up table 
 		
-		--------
-		
 		"""
-		
 		self.batch_size = batch_size
 		self.output_size = output_size
 		self.hidden_size = hidden_size
@@ -125,9 +94,7 @@ class AttentionModel(torch.nn.Module):
 		else:
 			h_0 = Variable(torch.zeros(1, batch_size, self.hidden_size))
 			c_0 = Variable(torch.zeros(1, batch_size, self.hidden_size))
-		
-		# print(h_0.shape)
-		# print(c_0.shape)
+
 		output, (final_hidden_state, final_cell_state) = self.lstm(input, (h_0, c_0)) # final_hidden_state.size() = (1, batch_size, hidden_size) 
 		output = output.permute(1, 0, 2) # output.size() = (batch_size, num_seq, hidden_size)
 		
